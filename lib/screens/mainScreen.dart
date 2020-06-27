@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sixfeetplantation/constants.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -6,16 +10,158 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  GoogleMapController mapController;
+  final dateFormat = DateFormat("MM-dd-yyyy");
+  final timeFormat = DateFormat("HH:mm");
+  final LatLng _center = const LatLng(41.83444043884994, -87.61638505301339);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('6 Feet Plantation'),
       ),
-      body: Center(
-        child: Text(
-          'welcome',
-        ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Container(
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              padding: EdgeInsets.only(bottom: 50),
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 18.0,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(color: AppPrimaryColor),
+              height: 50,
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            child: IconButton(
+              iconSize: 60,
+              icon: Image.asset(
+                'assets/icons/add_button.png',
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        elevation: 16,
+                        child: Container(
+                          height: 400,
+                          width: 400,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  'Add Plant Information',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 20),
+                                  height: 40,
+                                  child: TextField(
+                                    cursorColor: AppSecondaryColor,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Plant Name',
+                                        labelStyle: TextStyle(fontSize: 16)),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 20),
+                                  height: 40,
+                                  child: TextField(
+                                    cursorColor: AppSecondaryColor,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Plant Description',
+                                        labelStyle: TextStyle(fontSize: 16)),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 20),
+                                  height: 40,
+                                  child: DateTimeField(
+                                    format: dateFormat,
+                                    onShowPicker: (context, currentValue) {
+                                      return showDatePicker(
+                                          context: context,
+                                          firstDate: DateTime(1900),
+                                          initialDate:
+                                              currentValue ?? DateTime.now(),
+                                          lastDate: DateTime(2100));
+                                    },
+                                    cursorColor: AppSecondaryColor,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Date',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      prefixIcon: Icon(Icons.date_range),
+                                      suffixIcon: Icon(Icons.arrow_drop_down),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 20),
+                                  height: 40,
+                                  child: DateTimeField(
+                                    format: timeFormat,
+                                    onShowPicker:
+                                        (context, currentValue) async {
+                                      final time = await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.fromDateTime(
+                                            currentValue ?? DateTime.now()),
+                                      );
+                                      return DateTimeField.convert(time);
+                                    },
+                                    cursorColor: AppSecondaryColor,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Time',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      prefixIcon: Icon(Icons.date_range),
+                                      suffixIcon: Icon(Icons.arrow_drop_down),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              },
+            ),
+          )
+        ],
       ),
     );
   }
