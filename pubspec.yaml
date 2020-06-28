@@ -27,7 +27,11 @@ dependencies:
   location: ^3.0.0
   datetime_picker_formfield: ^1.0.0
   flutter_plugin_android_lifecycle: ^1.0.5
+  google_sign_in: ^4.5.1
+  firebase_auth: ^0.16.1
+  firebase_core: ^0.4.5
   geolocator: ^5.3.2+2
+  fluttertoast: ^4.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

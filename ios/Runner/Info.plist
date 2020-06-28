@@ -47,5 +47,16 @@
     <string>Needed to access location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Needed to access location</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<string>com.googleusercontent.apps.527246908165-lvqip6ijjjt4kpo2ftlm5toodshsro96</string>
+    		</array>
+    	</dict>
+    </array>
 </dict>
 </plist>

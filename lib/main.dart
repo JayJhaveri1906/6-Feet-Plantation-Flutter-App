@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sixfeetplantation/screens/loginScreen.dart';
 import 'constants.dart';
 import 'screens/mainScreen.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primaryColorLight: AppPrimaryLightColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MainScreen(),
+      home: LoginScreen(),
     );
   }
 }
