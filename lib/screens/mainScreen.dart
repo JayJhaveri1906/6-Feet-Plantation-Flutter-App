@@ -23,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -65,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               onPressed: () {
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) {
                       return Dialog(
@@ -73,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         elevation: 16,
                         child: Container(
-                          height: 400,
+                          height: 380,
                           width: 400,
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
@@ -172,7 +172,9 @@ class _MainScreenState extends State<MainScreen> {
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.pop(context, true);
+                                          },
                                           elevation: 2.0,
                                           highlightElevation: 8.0,
                                           disabledElevation: 0.0,
