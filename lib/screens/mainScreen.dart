@@ -65,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _getcurrentlocation();
+    _getCurrentLocation();
     setMarkFlag = true;
   }
 
@@ -117,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                 'assets/icons/add_button.png',
               ),
               onPressed: () {
-                _getcurrentlocation();
+                _getCurrentLocation();
                 buildShowDialog(context);
               },
             ),
@@ -313,36 +313,12 @@ class _MainScreenState extends State<MainScreen> {
           });
         }).then((result) {
       if (result) {
-        int i = 0;
-        if (_circles.length != 0) {
-          _circles.forEach((circle) async {
-            await geoLocator
-                .distanceBetween(userLocation.latitude, userLocation.longitude,
-                    circle.center.latitude, circle.center.longitude)
-                .then((value) {
-              if (value < circle.radius) {
-                print("flog");
-                setMarkFlag = false;
-              } else if (setMarkFlag) {
-                if (i == _circles.length - 1) {
-                  print("last");
-                  _getlocation();
-                  setMarkFlag = true;
-                }
-                i++;
-              } else if (!setMarkFlag) {
-                setMarkFlag = true;
-              }
-            });
-          });
-        } else {
-          _getlocation();
-        }
+        _checkTreeRadius();
       }
     });
   }
 
-  void _getlocation() async {
+  void _getLocation() async {
     final Uint8List markerIcon =
         await getBytesFromAsset('assets/icons/tree.png', 60);
     final lat = userLocation.latitude;
@@ -369,7 +345,7 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _getcurrentlocation() async {
+  void _getCurrentLocation() async {
     var location = new Location();
     try {
       userLocation = await location.getLocation();
@@ -379,6 +355,35 @@ class _MainScreenState extends State<MainScreen> {
           () {}); //rebuild the widget after getting the current location of the user
     } on Exception {
       userLocation = null;
+    }
+  }
+
+  void _checkTreeRadius() {
+    int i = 0;
+    setMarkFlag = true;
+    if (_circles.length != 0) {
+      _circles.forEach((circle) async {
+        await geoLocator
+            .distanceBetween(userLocation.latitude, userLocation.longitude,
+                circle.center.latitude, circle.center.longitude)
+            .then((value) {
+          if (value < circle.radius) {
+            print("flog");
+            setMarkFlag = false;
+          } else if (setMarkFlag) {
+            if (i == _circles.length - 1) {
+              print("last");
+              _getLocation();
+              setMarkFlag = true;
+            }
+            i++;
+          } else if (!setMarkFlag) {
+            setMarkFlag = true;
+          }
+        });
+      });
+    } else {
+      _getLocation();
     }
   }
 }
