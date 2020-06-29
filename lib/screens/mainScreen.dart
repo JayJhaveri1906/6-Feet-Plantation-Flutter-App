@@ -54,6 +54,7 @@ class _MainScreenState extends State<MainScreen> {
 
   bool _validate = false;
 
+  int count = 0;
   var location = new Location();
 
   var geoLocator = new Geolocator();
@@ -80,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     print("user" + user.displayName.toString());
     _userRef = database.reference().child("users").child(user.uid);
-    add = new User(user.displayName, user.uid, 0, user.email);
+    add = new User(user.displayName, user.uid, '0', user.email);
     _userRef.set(add.toJson());
     _getCurrentLocation();
     setMarkFlag = true;
@@ -172,7 +173,7 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: AppPrimaryColor,
         unselectedItemColor: AppPrimaryLightColor,
-        selectedItemColor: Colors.white,
+        selectedItemColor: AppPrimaryLightColor,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
@@ -182,11 +183,11 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Coming Soon'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Coming Soon'),
           ),
         ],
       ),
@@ -385,7 +386,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _setMarker() {
-    int c;
     TreeMarker newTree = new TreeMarker(
         _plantNameText,
         _plantDescriptionText,
@@ -397,9 +397,16 @@ class _MainScreenState extends State<MainScreen> {
     database.reference().child("markers").push().set(newTree.toJson());
     DatabaseReference d = database.reference().child("users").child(user.uid);
     d.once().then((DataSnapshot snapshot) {
-      c = int.parse(snapshot.value["count"]);
-      snapshot.value["count"] += 1;
+      print(snapshot.value["count"]);
+      count = int.parse(snapshot.value["count"]);
     });
+    count = count + 1;
+    print(count);
+    database
+        .reference()
+        .child("users")
+        .child(user.uid)
+        .update({"count": count.toString()});
   }
 
   void _getLocation(String circleName, String lati, String long) async {

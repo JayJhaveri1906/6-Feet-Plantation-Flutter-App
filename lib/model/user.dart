@@ -6,7 +6,7 @@ class User {
   String name;
   String userId;
   String emailId;
-  int count;
+  String count;
 
   User(this.name, this.userId, this.count, this.emailId);
 
@@ -24,5 +24,10 @@ class User {
       "count": count,
       "userId": userId,
     };
+  }
+
+  User.fromJson(var value) {
+    this.name = value['name'];
+    this.count = value['count'];
   }
 }
