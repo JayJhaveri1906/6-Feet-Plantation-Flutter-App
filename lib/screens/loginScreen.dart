@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sixfeetplantation/constants.dart';
 import 'package:sixfeetplantation/login.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,23 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   double width = 0.0;
   double height = 0.0;
-
+  FirebaseUser loggedUser;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    googleSignIn.isSignedIn().then((value) {
+      if (value) {
+        FirebaseAuth.instance.currentUser().then((value) {
+          user = value;
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(),
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -73,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       .then((user) => {
                             if (user != null)
                               {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => MainScreen(),

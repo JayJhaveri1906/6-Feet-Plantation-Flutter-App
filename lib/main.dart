@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sixfeetplantation/screens/loginScreen.dart';
 import 'constants.dart';
 import 'screens/mainScreen.dart';
+import 'login.dart';
 
 void main() {
   runApp(MyApp());

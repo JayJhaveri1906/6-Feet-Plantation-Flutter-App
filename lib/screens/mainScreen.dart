@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +10,9 @@ import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'dart:ui' as ui;
+
+import 'package:sixfeetplantation/login.dart';
+import 'package:sixfeetplantation/screens/loginScreen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -62,9 +66,11 @@ class _MainScreenState extends State<MainScreen> {
     mapController = controller;
   }
 
+  int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
+    print("user" + user.displayName.toString());
     _getCurrentLocation();
     setMarkFlag = true;
   }
@@ -83,6 +89,21 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('6 Feet Plantation'),
+        actions: <Widget>[
+          // action button
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: () {
+              signOutGoogle();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -92,7 +113,6 @@ class _MainScreenState extends State<MainScreen> {
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
               markers: markers,
-              padding: EdgeInsets.only(bottom: 50),
               initialCameraPosition: CameraPosition(
                 target: _center,
                 zoom: 18.0,
@@ -100,28 +120,41 @@ class _MainScreenState extends State<MainScreen> {
               circles: _circles,
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(color: AppPrimaryColor),
-              height: 50,
-            ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _getCurrentLocation();
+          buildShowDialog(context);
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+        shape:
+            new CircleBorder(side: BorderSide(color: Colors.white, width: 4.0)),
+        elevation: 2.0,
+        backgroundColor: AppPrimaryColor,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppPrimaryColor,
+        unselectedItemColor: AppPrimaryLightColor,
+        selectedItemColor: Colors.white,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
           ),
-          Positioned(
-            bottom: 10,
-            child: IconButton(
-              iconSize: 60,
-              icon: Image.asset(
-                'assets/icons/add_button.png',
-              ),
-              onPressed: () {
-                _getCurrentLocation();
-                buildShowDialog(context);
-              },
-            ),
-          )
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+          ),
         ],
       ),
     );
