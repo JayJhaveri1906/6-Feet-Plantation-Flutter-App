@@ -7,11 +7,14 @@ import 'package:sixfeetplantation/constants.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:sixfeetplantation/model/treeMarker.dart';
+import 'package:sixfeetplantation/model/user.dart';
 
 import 'dart:ui' as ui;
-
 import 'package:sixfeetplantation/login.dart';
+import 'package:sixfeetplantation/screens/leaderBoard.dart';
 import 'package:sixfeetplantation/screens/loginScreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -29,6 +32,8 @@ class _MainScreenState extends State<MainScreen> {
         .buffer
         .asUint8List();
   }
+
+  FirebaseDatabase database = new FirebaseDatabase();
 
   GoogleMapController mapController;
 
@@ -66,13 +71,24 @@ class _MainScreenState extends State<MainScreen> {
     mapController = controller;
   }
 
+  FirebaseUser loggedUser;
+  DatabaseReference _userRef;
+  User add;
   int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
     print("user" + user.displayName.toString());
+    _userRef = database.reference().child("users").child(user.uid);
+    add = new User(user.displayName, user.uid, 0, user.email);
+    _userRef.set(add.toJson());
     _getCurrentLocation();
     setMarkFlag = true;
+    database.reference().child("markers").once().then((DataSnapshot snapshot) {
+      for (var value in snapshot.value.values) {
+        _getLocation(value["treeName"], value["lat"], value["long"]);
+      }
+    });
   }
 
   @override
@@ -95,7 +111,11 @@ class _MainScreenState extends State<MainScreen> {
             onSelected: (value) {
               switch (value) {
                 case menuLeaderBoard:
-                  print("Leader");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LeaderBoard(),
+                      ));
                   break;
                 case menuLogout:
                   signOutGoogle();
@@ -364,17 +384,35 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _getLocation() async {
+  void _setMarker() {
+    int c;
+    TreeMarker newTree = new TreeMarker(
+        _plantNameText,
+        _plantDescriptionText,
+        userLocation.latitude.toString(),
+        userLocation.longitude.toString(),
+        _plantationDateText,
+        _plantationTimeText,
+        user.email.toString());
+    database.reference().child("markers").push().set(newTree.toJson());
+    DatabaseReference d = database.reference().child("users").child(user.uid);
+    d.once().then((DataSnapshot snapshot) {
+      c = int.parse(snapshot.value["count"]);
+      snapshot.value["count"] += 1;
+    });
+  }
+
+  void _getLocation(String circleName, String lati, String long) async {
     final Uint8List markerIcon =
         await getBytesFromAsset('assets/icons/tree.png', 60);
-    final lat = userLocation.latitude;
-    final lon = userLocation.longitude;
+    final lat = double.parse(lati);
+    final lon = double.parse(long);
     setState(() {
       _circles.add(
         Circle(
           strokeColor: AppPrimaryColor,
           strokeWidth: 2,
-          circleId: CircleId(_plantNameText),
+          circleId: CircleId(circleName),
           center: LatLng(lat, lon),
           fillColor: AppSecondaryLightColor.withOpacity(0.8),
           radius: 1.8288,
@@ -382,8 +420,8 @@ class _MainScreenState extends State<MainScreen> {
       );
       markers.add(
         Marker(
-          markerId: MarkerId(_plantNameText),
-          infoWindow: InfoWindow(title: _plantDescriptionText),
+          markerId: MarkerId(circleName),
+          infoWindow: InfoWindow(title: "Tree"),
           position: LatLng(lat, lon),
           icon: BitmapDescriptor.fromBytes(markerIcon),
         ),
@@ -419,7 +457,8 @@ class _MainScreenState extends State<MainScreen> {
           } else if (setMarkFlag) {
             if (i == _circles.length - 1) {
               print("last");
-              _getLocation();
+              _setMarker();
+              _getMarkers();
               setMarkFlag = true;
             }
             i++;
@@ -429,7 +468,18 @@ class _MainScreenState extends State<MainScreen> {
         });
       });
     } else {
-      _getLocation();
+      _setMarker();
+      _getMarkers();
     }
+  }
+
+  void _getMarkers() {
+    _circles.clear();
+    markers.clear();
+    database.reference().child("markers").once().then((DataSnapshot snapshot) {
+      for (var value in snapshot.value.values) {
+        _getLocation(value["treeName"], value["lat"], value["long"]);
+      }
+    });
   }
 }

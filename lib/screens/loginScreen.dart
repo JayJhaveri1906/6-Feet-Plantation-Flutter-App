@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   double width = 0.0;
   double height = 0.0;
-  FirebaseUser loggedUser;
   @override
   void initState() {
     super.initState();
