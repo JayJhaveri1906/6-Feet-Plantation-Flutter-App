@@ -1,4 +1,4 @@
-# sixfeetplantation
+# 6-Feet-Plantation
 
 A new Flutter application.
 
