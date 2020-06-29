@@ -4,6 +4,7 @@ import 'package:sixfeetplantation/screens/loginScreen.dart';
 import 'constants.dart';
 import 'screens/mainScreen.dart';
 import 'login.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(MyApp());

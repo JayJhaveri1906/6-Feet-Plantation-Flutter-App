@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'mainScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    checkPermission();
     googleSignIn.isSignedIn().then((value) {
       if (value) {
         FirebaseAuth.instance.currentUser().then((value) {
@@ -116,5 +118,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  void checkPermission() async {
+    GeolocationStatus geolocationStatus =
+        await Geolocator().checkGeolocationPermissionStatus();
   }
 }

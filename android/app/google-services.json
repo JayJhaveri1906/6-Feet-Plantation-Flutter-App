@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "527246908165",
+    "firebase_url": "https://six-feet-plantation.firebaseio.com",
+    "project_id": "six-feet-plantation",
+    "storage_bucket": "six-feet-plantation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527246908165:android:e1058ec0b4a978fba8356c",
+        "android_client_info": {
+          "package_name": "com.example.sixfeetplantation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527246908165-5mvu052bpd5udh0p3rgdsff49vr1hqc2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sixfeetplantation",
+            "certificate_hash": "1b794bc5bbc4e379f0a3428e5d7193f49937d286"
+          }
+        },
+        {
+          "client_id": "527246908165-iqu2g5u2r7g9pofnso0hpjckh2on09i1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkLc4KrvcyWnMKOZ-AmhMbzAQ5Dtfv4qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527246908165-iqu2g5u2r7g9pofnso0hpjckh2on09i1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "527246908165-lvqip6ijjjt4kpo2ftlm5toodshsro96.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sixfeetplantation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
