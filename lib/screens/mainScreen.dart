@@ -91,16 +91,29 @@ class _MainScreenState extends State<MainScreen> {
         title: Text('6 Feet Plantation'),
         actions: <Widget>[
           // action button
-          IconButton(
-            icon: Icon(Icons.remove),
-            onPressed: () {
-              signOutGoogle();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
-              );
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case menuLeaderBoard:
+                  print("Leader");
+                  break;
+                case menuLogout:
+                  signOutGoogle();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ));
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return choices.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
             },
           ),
         ],
