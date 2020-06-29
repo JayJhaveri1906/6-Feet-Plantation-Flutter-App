@@ -32,20 +32,29 @@ class _LeaderBoardState extends State<LeaderBoard> {
               height: 50,
               child: new Card(
                 child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    new Text(
-                      (index + 1).toString(),
-                      style: TextStyle(fontSize: 20),
+                    Container(
+                      child: new Text(
+                        (index + 1).toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      width: 30,
+                      padding: EdgeInsets.only(left: 30),
                     ),
-                    new Text(
-                      list[index].name,
-                      style: TextStyle(fontSize: 20),
+                    Container(
+                      child: new Text(
+                        list[index].name,
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
-                    new Text(
-                      list[index].count.toString(),
-                      style: TextStyle(fontSize: 20),
+                    Container(
+                      child: new Text(
+                        list[index].count.toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      width: 30,
+                      padding: EdgeInsets.only(right: 40),
                     )
                   ],
                 ),

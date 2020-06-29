@@ -401,7 +401,6 @@ class _MainScreenState extends State<MainScreen> {
       count = int.parse(snapshot.value["count"]);
     });
     count = count + 1;
-    print(count);
     database
         .reference()
         .child("users")
